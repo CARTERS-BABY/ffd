@@ -1,0 +1,81 @@
+<html>
+<head>
+
+	<title>Detecção de Objetos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.js"></script>
+
+  <script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+  
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body background="background.jpg">
+  
+  <center>
+    <h1 class="btn btn-info heading">Detecção de Objetos</h1>
+    <h3 id="status" class="btn btn-danger"></h3>
+
+  </center>
+
+  <script >
+var img = ''
+var status = ''
+var objects = []
+
+function preload(){
+img = loadImage('quarto.webp')
+}
+
+
+function setup(){
+
+    canvas = createCanvas (640, 420)
+    canvas.center()
+Objectdetector = ml5.objectDetector('cocossd' , modeload)
+document.getElementById('status').innerHTML = 'status : detectando objetos'
+
+}
+
+function draw(){
+image(img ,0 , 0 , 640 , 420 )
+fill('red')
+
+noFill()
+
+stroke('red')
+if(status != ''){
+    for(var loop = 0 ; loop < objects.length ; loop++){
+        rect(objects[loop].x , objects[loop].y , objects[loop].width , objects[loop].height) 
+        document.getElementById('status').innerHTML = 'staus : atualizado '
+        porcentagem = floor(objects [ loop ].confidence * 100 )
+        text(objects[loop].label  + ' ' + porcentagem + '%' , objects[loop].x , objects[loop].y)
+    }
+    
+  
+    
+
+}
+
+
+}
+function modeload(){
+    console.log('modelocarregado')
+    status = true 
+    Objectdetector.detect(img , gotresults ) 
+}
+function gotresults(error,results){
+    if(error){
+        console.log(error) 
+        
+    }
+    console.log(results)
+    objects = results 
+}
+  </script>
+
+</body>
+</html>
